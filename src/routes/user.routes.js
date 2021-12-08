@@ -9,14 +9,9 @@ module.exports = function(app) {
     );
     next();
   });
+  app.post("/api/users/change-password", [authJwt.verifyToken], controller.changePassword);
 
-  app.get("/api/test/all", controller.allAccess);
+  app.get("/api/users/get-user-info",[authJwt.verifyToken], controller.getUserInfo);
 
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
-
-  app.get(
-    "/api/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
-  );
+  app.post("/api/users/update-user-info", [authJwt.verifyToken], controller.updateUserInfo);
 };
