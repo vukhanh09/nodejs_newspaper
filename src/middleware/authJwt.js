@@ -3,29 +3,29 @@ const config = require("../config/auth.config");
 const db = require("../model");
 const User = db.user;
 const Role = db.role;
-
+const httpStatus = require("../utils/httpStatus")
 const { TokenExpiredError } = jwt;
 
 
 const CatchExpiredTokenError = (err, res) => {
     if(err instanceof TokenExpiredError){
-        return res.status(401).send({
-            code: 401,
+        return res.status(httpStatus.UNAUTHORIZED).send({
+            code: httpStatus.UNAUTHORIZED,
             message: "Unauthorized! Access token was expired"
         });
     }
-    return res.status(401).send({
-        code:401,
+    return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
         message: "Unauthorized!"
     });
 }
 
 const verifyToken = (req, res, next) => {
-    let token = req.headers["x-access-token"];
+    let token = req.headers.authorization.split(' ')[1];
 
     if(!token){
-        return res.status(403).send({
-            code: 403,
+        return res.status(httpStatus.FORBIDDEN).send({
+            code: httpStatus.FORBIDDEN,
             message: "No token provided!"
         });
     }
@@ -42,8 +42,8 @@ const verifyToken = (req, res, next) => {
 const isAdmin = (req,res, next) => {
     User.findById(req.userId).exec((err, user) => {
         if(err){
-            res.status(500).send({
-                code: 500,
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                code: httpStatus.INTERNAL_SERVER_ERROR,
                 message: err
             });
             return;
@@ -55,8 +55,8 @@ const isAdmin = (req,res, next) => {
             },
             (err, roles) => {
                 if(err){
-                    res.status(500).send({
-                        code: 500,
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                        code: httpStatus.INTERNAL_SERVER_ERROR,
                         message: err
                     });
                     return;
@@ -68,8 +68,8 @@ const isAdmin = (req,res, next) => {
                         return;
                     }
                 }
-                res.status(403).send({
-                    code: 403,
+                res.status(httpStatus.FORBIDDEN).send({
+                    code: httpStatus.FORBIDDEN,
                     message: "Require ADMIN role!"
                 });
                 return;

@@ -5,7 +5,7 @@ const db = require("../model");
 const { authJwt } = require("../middleware");
 const User = db.user;
 const Role = db.role;
-
+const httpStatus = require("../utils/httpStatus")
 //signup controller
 exports.signup = (req, res) => {
     const user = new User({
@@ -17,8 +17,8 @@ exports.signup = (req, res) => {
 
     user.save((err, user) => {
         if(err){
-            res.status(500).send({
-                code: 500,
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                code: httpStatus.INTERNAL_SERVER_ERROR,
                 message: err
             });
             return;
@@ -26,8 +26,8 @@ exports.signup = (req, res) => {
 
         Role.findOne({name: "USER"}, (err, role) => {
             if(err){
-                res.status(500).send({
-                    code: 500,
+                res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                    code: httpStatus.INTERNAL_SERVER_ERROR,
                     message: err
                 });
                 return;
@@ -36,15 +36,15 @@ exports.signup = (req, res) => {
             user.roles = [role._id];
             user.save(err => {
                 if(err){
-                    res.status(500).send({
-                        code: 500,
+                    res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                        code: httpStatus.INTERNAL_SERVER_ERROR,
                         message: err
                     });
                     return;
                 }
                 console.log("registrations info: ", user);
-                res.send({
-                    code: 201,
+                res.status(httpStatus.CREATED).send({
+                    code: httpStatus.CREATED,
                     message: "User was registered successfully!"
                 });
             });
@@ -59,22 +59,22 @@ exports.signin = (req, res) => {
     .populate("roles","-__v")
     .exec((err, user) => {
         if(err) {
-            res.status(500).send({
-                code: 500,
+            res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                code: httpStatus.INTERNAL_SERVER_ERROR,
                 message: err
             });
             return;
         }
         if(!user){
-            return res.status(404).send({
-                code: 404,
+            return res.status(httpStatus.NOT_FOUND).send({
+                code: httpStatus.NOT_FOUND,
                 message: "User not found!"
             });
         }
         const passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
         if(!passwordIsValid){
-            return res.status(401).send({
-                code: 401,
+            return res.status(httpStatus.UNAUTHORIZED).send({
+                code: httpStatus.UNAUTHORIZED,
                 message: "Invalid Password!",
                 data: {
                     accessToken: null
@@ -97,8 +97,8 @@ exports.signin = (req, res) => {
             authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
         }
         console.log("login info: ",user)
-        res.status(200).send({
-            code: 200,
+        res.status(httpStatus.OK).send({
+            code: httpStatus.OK,
             message: "Login successfully!",
             data: {
                 username: user.username,
