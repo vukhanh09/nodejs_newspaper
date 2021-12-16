@@ -5,11 +5,7 @@ const dbConfig = require("./src/config/db.config");
 
 const app = express();
 
-var corsOptions = {
-    origin: "http://localhost:8088"
-};
-
-app.use(cors(corsOptions));
+app.use(cors());
 
 //parser request of content-type -> application/json
 app.use(bodyParser.json());
@@ -65,7 +61,10 @@ function initial(){
 //routes
 require("./src/routes/auth.routes")(app);
 require("./src/routes/user.routes")(app);
-
+require("./src/routes/news.routes")(app);
+require("./src/routes/perspective.routes")(app);
+require("./src/routes/author.routes")(app);
+require("./src/routes/topic.routes")(app);
 
 const PORT = process.env.PORT || 9091;
 app.listen(PORT, () => {

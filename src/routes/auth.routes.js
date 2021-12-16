@@ -7,7 +7,6 @@ module.exports = function (app){
             "Access-Control-Allow-Headers",
             "Authorization, Origin, Content-Type, Accept"
         );
-
         next();
     })
 
