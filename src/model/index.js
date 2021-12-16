@@ -7,6 +7,10 @@ const db = {};
 db.mongoose = mongoose;
 db.user = require("./user.model");
 db.role = require("./role.model");
+db.topic = require("./topic.model");
+db.perspective = require("./perspective.model");
+db.author = require("./author.model");
+db.news = require("./news.model");
 
 db.ROLES = ["USER", "ADMIN"];
 

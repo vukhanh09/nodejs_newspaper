@@ -7,7 +7,7 @@ const User = db.user;
 const Role = db.role;
 const httpStatus = require("../utils/httpStatus")
 //signup controller
-exports.signup = (req, res) => {
+exports.signup =  (req, res) => {
     const user = new User({
         username: req.body.username,
         email: req.body.email,

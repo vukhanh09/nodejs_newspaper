@@ -5,7 +5,7 @@ module.exports = function(app) {
   app.use(function(req, res, next) {
     res.header(
       "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
+      "Authorization, Origin, Content-Type, Accept"
     );
     next();
   });
@@ -14,4 +14,6 @@ module.exports = function(app) {
   app.get("/api/users/get-user-info",[authJwt.verifyToken], controller.getUserInfo);
 
   app.post("/api/users/update-user-info", [authJwt.verifyToken], controller.updateUserInfo);
+
+  app.get("/api/users/get-list-users",[authJwt.verifyToken, authJwt.isAdmin], controller.getListUsers);
 };

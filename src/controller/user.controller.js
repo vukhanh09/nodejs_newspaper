@@ -147,4 +147,19 @@ userController.updateUserInfo = async (req, res, next) => {
   }
 };
 
+userController.getListUsers = async (req, res, next) => {
+  try{
+    const listUsers = await User.find();
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "get all user succesfully!",
+      data: listUsers
+    })
+  }catch{
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
 module.exports = userController;
