@@ -65,6 +65,7 @@ require("./src/routes/news.routes")(app);
 require("./src/routes/perspective.routes")(app);
 require("./src/routes/author.routes")(app);
 require("./src/routes/topic.routes")(app);
+require("./src/routes/comment.routes")(app);
 
 const PORT = process.env.PORT || 9091;
 app.listen(PORT, () => {

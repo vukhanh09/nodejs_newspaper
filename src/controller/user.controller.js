@@ -49,8 +49,10 @@ userController.changePassword = async (req, res, next) => {
       {
         id: user.id,
         username: user.username,
+        nick_name: user.nick_name,
         email: user.email,
         address: user.address,
+        date_of_birth: user.date_of_birth
       },
       config.secret,
       {
@@ -64,9 +66,11 @@ userController.changePassword = async (req, res, next) => {
       data: {
         id: user.id,
         username: user.username,
+        nick_name: user.nick_name,
         email: user.email,
         address: user.address,
-        accessToken: token,
+        date_of_birth: user.date_of_birth,
+        accessToken: token
       },
     });
   } catch (err) {
@@ -76,6 +80,8 @@ userController.changePassword = async (req, res, next) => {
     });
   }
 };
+
+//get user information
 userController.getUserInfo = async (req, res, next) => {
   try {
     let userId = req.userId;
@@ -92,11 +98,12 @@ userController.getUserInfo = async (req, res, next) => {
       data: {
         id: userId,
         username: user.username,
+        nick_name: user.nick_name,
         email: user.email,
         address: user.address,
+        date_of_birth: user.date_of_birth
       },
     });
-    return;
   } catch (err) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       code: httpStatus.INTERNAL_SERVER_ERROR,
@@ -105,7 +112,8 @@ userController.getUserInfo = async (req, res, next) => {
   }
 };
 
-userController.updateUserInfo = async (req, res, next) => {
+// update address
+userController.updateUserAddress = async (req, res, next) => {
   try {
     let userId = req.userId;
     let user = await User.findById(userId);
@@ -122,22 +130,11 @@ userController.updateUserInfo = async (req, res, next) => {
         address: newAddress
       }
     );
-    if(!user){
-      return res.status(httpStatus.NOT_FOUND).send({
-        code: httpStatus.NOT_FOUND,
-        message: "user not found!"
-      })
-    }
-    user = await User.findById(userId).select('username email address');
+    const rsUser = await User.findById(userId);
     res.status(httpStatus.OK).send({
       code: httpStatus.OK,
-      message: "update user information successfully!",
-      data: {
-        id: userId,
-        username: user.username,
-        email: user.email,
-        address: user.address
-      }
+      message: "update user\'s address successfully!",
+      data: rsUser
     });
   } catch (err) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
@@ -147,6 +144,156 @@ userController.updateUserInfo = async (req, res, next) => {
   }
 };
 
+// update date of birth
+userController.updateUserDateOfBirth = async (req, res, next) => {
+  try {
+    let userId = req.userId;
+    let user = await User.findById(userId);
+    if (user == null) {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Unauthorized",
+      });
+    }
+    const { newDateOfBirth } = req.body;
+    user = await User.findOneAndUpdate(
+      {_id: userId},
+      {
+        date_of_birth: newDateOfBirth
+      }
+    );
+    const rsUser = await User.findById(userId);
+    res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update user\'s date_of_birth successfully!",
+      data: rsUser
+    });
+  } catch (err) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+};
+
+// update nick name
+userController.updateUserNickName = async (req, res, next) => {
+  try {
+    let userId = req.userId;
+    let user = await User.findById(userId);
+    if (user == null) {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Unauthorized",
+      });
+    }
+    const { nickName } = req.body;
+    user = await User.findOneAndUpdate(
+      {_id: userId},
+      {
+        nick_name: nickName
+      }
+    );
+    const rsUser = await User.findById(userId);
+    res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update user\'s nick name successfully!",
+      data: rsUser
+    });
+  } catch (err) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+};
+
+// update email
+userController.updateUserEmail = async (req, res, next) => {
+  try {
+    let userId = req.userId;
+    let user = await User.findById(userId);
+    if (user == null) {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Unauthorized",
+      });
+    }
+    const newEmail = req.body.newEmail;
+    //check exist email
+    let checkUser = await User.find({
+      email: newEmail
+    });
+    if(checkUser.length != 0){
+      console.log(checkUser);
+      return res.status(httpStatus.BAD_REQUEST).send({
+        code: httpStatus.BAD_REQUEST,
+        message: "Email has already existed!"
+      });
+    }
+    user = await User.findOneAndUpdate(
+      {_id: userId},
+      {
+        email: newEmail
+      }
+    );
+    const rsUser = await User.findById(userId);
+    res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update user\'s email successfully!",
+      data: rsUser
+    });
+  } catch (err) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+};
+
+// update username -- not to need
+userController.updateUserName= async (req, res, next) => {
+  try {
+    let userId = req.userId;
+    let user = await User.findById(userId);
+    if (user == null) {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Unauthorized",
+      });
+    }
+    const { newUsername } = req.body;
+    // check exist username
+    let checkUser = await User.find({
+      username: newUsername
+    });
+    if(checkUser){
+      return res.status(httpStatus.BAD_REQUEST).send({
+        code: httpStatus.BAD_REQUEST,
+        message: "Username has already existed!"
+      });
+    }
+    user = await User.findOneAndUpdate(
+      {_id: userId},
+      {
+        username: newUsername
+      }
+    );
+    const rsUser = await User.findById(userId);
+    res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update username successfully!",
+      data: rsUser
+    });
+  } catch (err) {
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+};
+
+// get list user
 userController.getListUsers = async (req, res, next) => {
   try{
     const listUsers = await User.find();
