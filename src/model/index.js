@@ -11,6 +11,7 @@ db.topic = require("./topic.model");
 db.perspective = require("./perspective.model");
 db.author = require("./author.model");
 db.news = require("./news.model");
+db.comment = require("./comment.model");
 
 db.ROLES = ["USER", "ADMIN"];
 

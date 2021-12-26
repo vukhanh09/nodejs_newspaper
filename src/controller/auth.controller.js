@@ -2,7 +2,6 @@ const config = require("../config/auth.config");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../model");
-const { authJwt } = require("../middleware");
 const User = db.user;
 const Role = db.role;
 const httpStatus = require("../utils/httpStatus")
@@ -10,9 +9,11 @@ const httpStatus = require("../utils/httpStatus")
 exports.signup =  (req, res) => {
     const user = new User({
         username: req.body.username,
+        nick_name: req.body.username,
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password,8),
-        address: req.body.address
+        address: req.body.address,
+        date_of_birth: req.body.date_of_birth
     });
 
     user.save((err, user) => {
@@ -85,8 +86,10 @@ exports.signin = (req, res) => {
         var token = jwt.sign({
             id: user.id,
             username: user.username,
+            nick_name: user.nick_name,
             email: user.email,
-            address: user.address
+            address: user.address,
+            date_of_birth: user.date_of_birth
         }, config.secret, {
             expiresIn: 86400 //24 hours
         });
@@ -102,8 +105,10 @@ exports.signin = (req, res) => {
             message: "Login successfully!",
             data: {
                 username: user.username,
+                nick_name: user.nick_name,
                 email: user.email,
                 address: user.address,
+                date_of_birth: user.date_of_birth,
                 accessToken: token 
             }
         });
