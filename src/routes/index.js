@@ -9,6 +9,8 @@ function route(app){
     require("./author.routes")(app);
     require("./topic.routes")(app);
     require("./searchNew.routes")(app);
+    require("./comment.routes")(app);
+    require("./watchLater.routes")(app);
 
 }
 module.exports = route;

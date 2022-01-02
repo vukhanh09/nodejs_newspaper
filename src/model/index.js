@@ -12,7 +12,7 @@ db.perspective = require("./perspective.model");
 db.author = require("./author.model");
 db.news = require("./news.model");
 db.comment = require("./comment.model");
-
+db.watchLater = require("./watchLater.model");
 db.ROLES = ["USER", "ADMIN"];
 
 module.exports = db;

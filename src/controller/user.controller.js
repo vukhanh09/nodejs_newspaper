@@ -293,14 +293,17 @@ userController.updateUserName= async (req, res, next) => {
   }
 };
 
-// get list user
+// get list user: ADMIN -> require admin role
 userController.getListUsers = async (req, res, next) => {
   try{
     const listUsers = await User.find();
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get all user succesfully!",
-      data: listUsers
+      data: {
+        count: listUsers.length,
+        list_user: listUsers
+      }
     })
   }catch{
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
