@@ -95,14 +95,7 @@ userController.getUserInfo = async (req, res, next) => {
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get user information successfully!",
-      data: {
-        id: userId,
-        username: user.username,
-        nick_name: user.nick_name,
-        email: user.email,
-        address: user.address,
-        date_of_birth: user.date_of_birth
-      },
+      data: user
     });
   } catch (err) {
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({

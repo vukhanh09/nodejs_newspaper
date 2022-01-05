@@ -45,6 +45,7 @@ newsController.getHotNews = async (req, res, next) => {
         message: "Collection is empty!",
       });
     }
+    console.log(hotNews);
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get hot news successfully!",
