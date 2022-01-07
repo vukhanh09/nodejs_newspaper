@@ -9,6 +9,7 @@ function route(app){
     require("./author.routes")(app);
     require("./topic.routes")(app);
     require("./searchNew.routes")(app);
+    require("./admin.routes")(app);
 
 }
 module.exports = route;
