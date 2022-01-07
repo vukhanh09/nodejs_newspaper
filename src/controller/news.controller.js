@@ -10,13 +10,18 @@ newsController.getNewsById = async (req, res, next) => {
     const news = await News.findOne({
       news_id: newsId,
     });
-
+    
     if (!news) {
       return res.status(httpStatus.NOT_FOUND).send({
         code: httpStatus.NOT_FOUND,
         message: "News not found!",
       });
     }
+    let currentViews = news.views;
+    console.log(currentViews);
+    await News.updateOne({news_id: newsId},{
+      views: currentViews + 1
+    });
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get news by news_id successfully!",
@@ -40,6 +45,7 @@ newsController.getHotNews = async (req, res, next) => {
         message: "Collection is empty!",
       });
     }
+    console.log(hotNews);
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get hot news successfully!",
@@ -81,7 +87,7 @@ newsController.getTop10News = async (req, res, next) => {
   }
 };
 
-//add news
+//add news: ADMIN -> require admin role
 newsController.addNews = async (req, res, next) => {
   try {
     let newsToAdd = {

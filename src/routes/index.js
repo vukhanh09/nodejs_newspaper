@@ -10,6 +10,8 @@ function route(app){
     require("./topic.routes")(app);
     require("./searchNew.routes")(app);
     require("./admin.routes")(app);
+    require("./comment.routes")(app);
+    require("./watchLater.routes")(app);
 
 }
 module.exports = route;
