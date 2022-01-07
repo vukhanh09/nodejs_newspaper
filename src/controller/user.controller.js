@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../model");
 const User = db.user;
+const Role = db.role;
 const httpStatus = require("../utils/httpStatus");
 const userController = {};
 
@@ -289,7 +290,16 @@ userController.updateUserName= async (req, res, next) => {
 // get list user: ADMIN -> require admin role
 userController.getListUsers = async (req, res, next) => {
   try{
-    const listUsers = await User.find();
+    //get id of USER role
+    const userRole = await Role.findOne({name: "USER"});
+    if(userRole.length == 0){
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "User Role not found"
+      });
+    }
+    console.log(userRole._id);
+    const listUsers = await User.find({roles:[userRole._id]});
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get all user succesfully!",
@@ -298,7 +308,7 @@ userController.getListUsers = async (req, res, next) => {
         list_user: listUsers
       }
     })
-  }catch{
+  }catch(err){
     return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
       code: httpStatus.INTERNAL_SERVER_ERROR,
       message: err.message,
