@@ -298,7 +298,7 @@ userController.getListUsers = async (req, res, next) => {
         message: "User Role not found"
       });
     }
-    console.log(userRole._id);
+    // console.log(userRole._id);
     const listUsers = await User.find({roles:[userRole._id]});
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,

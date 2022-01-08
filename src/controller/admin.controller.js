@@ -3,8 +3,10 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const db = require("../model");
 const User = db.user;
+const News = db.news;
 const httpStatus = require("../utils/httpStatus");
 const userController = {};
+
 
 userController.findUser = async (req, res, next) => {
     try{
@@ -40,6 +42,43 @@ userController.findUser = async (req, res, next) => {
         });
 
     }
+}
+
+userController.addPost = async (req, res, next) => {
+    // console.log(req.body)
+    try{
+        var data = req.body.data
+        var newid = await News.findOne().sort('-news_id').exec()
+        newid = newid.news_id+1
+        data.url = data.url + newid.toString()
+        // console.log(newid)
+        try{
+            await News.create({
+                ...data,
+                news_id:newid
+            });
+            // console.log('done')
+        }
+        catch(err){
+            return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+                code: httpStatus.INTERNAL_SERVER_ERROR,
+                message: err.message,
+            });
+
+        }
+        return res.status(httpStatus.OK).send({
+            code: httpStatus.OK,
+            message: "update data successfully!",
+        });
+    }
+    catch(err){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+            code: httpStatus.INTERNAL_SERVER_ERROR,
+            message: err.message,
+        });
+
+    }
+    
 }
 
 module.exports = userController;

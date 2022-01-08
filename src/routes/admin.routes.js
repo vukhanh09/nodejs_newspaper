@@ -9,5 +9,6 @@ module.exports = function(app) {
     );
     next();
   });
-  app.get("/api/admin/find-user", controller.findUser);
+  app.get("/api/admin/find-user",[authJwt.verifyToken, authJwt.isAdmin], controller.findUser);
+  app.post("/api/admin/add-post",[authJwt.verifyToken, authJwt.isAdmin], controller.addPost);
 };
