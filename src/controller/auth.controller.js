@@ -96,7 +96,7 @@ exports.signin = (req, res) => {
             address: user.address,
             date_of_birth: user.date_of_birth
         }, config.secret, {
-            expiresIn: 86400 //24 hours
+            expiresIn: config.jwt_expiration //24 hours
         });
 
         var authorities = [];
@@ -161,7 +161,7 @@ exports.signinAdmin = (req, res) => {
             nick_name: user.nick_name,
             email: user.email
         }, config.secret, {
-            expiresIn: 86400 //24 hours
+            expiresIn: config.jwt_expiration //24 hours
         });
 
         var authorities = [];
@@ -170,6 +170,7 @@ exports.signinAdmin = (req, res) => {
             authorities.push("ROLE_" + user.roles[i].name.toUpperCase());
         }
         console.log("login info: ",user)
+        
         res.status(httpStatus.OK).send({
             code: httpStatus.OK,
             message: "Login successfully!",

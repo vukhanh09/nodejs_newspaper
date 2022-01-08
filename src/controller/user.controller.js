@@ -57,7 +57,7 @@ userController.changePassword = async (req, res, next) => {
       },
       config.secret,
       {
-        expiresIn: 86400, //24 hours
+        expiresIn: config.jwt_expiration, //24 hours
       }
     );
 
