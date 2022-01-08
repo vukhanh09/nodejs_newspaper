@@ -232,7 +232,8 @@ newsController.updateNews = async (req, res, next) => {
       url_image:data.url_image,
       description:data.description,
       extend_description:data.extend_description,
-      topic:data.topic
+      topic:data.topic,
+      add_time: new Date().toLocaleDateString()
     })
     // console.log(resUp.n)
     return res.status(httpStatus.OK).send({
