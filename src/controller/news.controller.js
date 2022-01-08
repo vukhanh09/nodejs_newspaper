@@ -150,7 +150,7 @@ function getUrlFromTitleAndId(title, id) {
     .replace(",", "")
     .replace("/", "-")
     .split(" ");
-  let rs = "http://localhost:3000/";
+  let rs = "";
   for (let str in listWords) {
     rs += listWords[str] + "-";
   }
