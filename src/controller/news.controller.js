@@ -6,7 +6,7 @@ const newsController = {};
 //get news by news_id
 newsController.getNewsById = async (req, res, next) => {
   try {
-    let newsId = req.body.newsId;
+    let newsId = req.query.newsId;
     const news = await News.findOne({
       news_id: newsId,
     });
@@ -18,7 +18,7 @@ newsController.getNewsById = async (req, res, next) => {
       });
     }
     let currentViews = news.views;
-    console.log(currentViews);
+    // console.log(currentViews);
     await News.updateOne({news_id: newsId},{
       views: currentViews + 1
     });
@@ -187,4 +187,70 @@ newsController.countViews = async (req, res, next) => {
     });
   }
 }
+
+// get all news
+
+newsController.getAllNews = async (req, res, next) => {
+  try{
+    const news = await News.find();
+    if (!news) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "News not found!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "get all list news successfully!",
+      data: {
+        listNews: news
+      },
+    });
+  }
+  catch(err){
+    console.log(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+
+  }
+}
+
+newsController.updateNews = async (req, res, next) => {
+  try{
+    let data = req.body.data
+    console.log(data.author)
+
+
+    const news_id = req.body.news_id.news_id
+    console.log(news_id)
+    const resUp = await News.updateOne({news_id:news_id},{
+      title:data.title,
+      content:data.content,
+      author:"Tuấn Hihi",
+      url_image:data.url_image,
+      description:data.description,
+      extend_description:data.extend_description,
+      topic:data.topic
+    })
+    // console.log(resUp.n)
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update news successfully!",
+    });
+  }
+  catch(err){
+    console.log(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+
+  }
+}
+
+
+
+
 module.exports = newsController;
