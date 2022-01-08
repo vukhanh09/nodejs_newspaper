@@ -5,7 +5,7 @@ const authorController = {};
 
 authorController.getAuthorById = async (req, res, next) => {
   try {
-    const authorId = req.body.authorId;
+    const authorId = req.query.authorId;
     let author = await Author.findOne({
       author_id: authorId,
     });
@@ -30,7 +30,7 @@ authorController.getAuthorById = async (req, res, next) => {
 
 authorController.getAuthorByName = async (req, res, next) => {
   try {
-    const authorName = req.body.authorName;
+    const authorName = req.query.authorName;
     let author = await Author.findOne({
       name: authorName,
     });

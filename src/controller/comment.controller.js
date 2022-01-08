@@ -7,7 +7,7 @@ const commentController = {};
 //get all comment of a news 
 commentController.getListCommentOfNews = async (req, res, next) => {
     try{
-        let newsId = req.body.news_id;
+        let newsId = req.query.news_id;
         let listComments = await Comment.find({news_id: newsId});
         console.log(listComments);
         if(!listComments){
@@ -31,7 +31,7 @@ commentController.getListCommentOfNews = async (req, res, next) => {
 //get number of comment in a news
 commentController.countNumberCommentOfNews = async (req, res, next) => {
     try{
-        let newsId = req.body.news_id;
+        let newsId = req.query.news_id;
         let listComments = await Comment.find({news_id: newsId});
         if(!listComments){
             return res.status(httpStatus.NO_CONTENT).send({

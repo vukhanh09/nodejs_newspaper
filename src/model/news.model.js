@@ -38,6 +38,18 @@ const News = mongoose.model(
         views: {
             type: Number,
             required: true
+        },
+        author:{
+            type: String,
+            required: true
+        },
+        add_time:{
+            type: String, 
+            required: true
+        },
+        last_modify:{
+            type: String, 
+            required: true
         }
     })
 );
