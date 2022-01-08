@@ -2,6 +2,7 @@ const db = require("../model");
 const httpStatus = require("../utils/httpStatus");
 const News = db.news;
 const newsController = {};
+const currentDay = new Date().toLocaleDateString();
 
 //get news by news_id
 newsController.getNewsById = async (req, res, next) => {
@@ -97,6 +98,8 @@ newsController.addNews = async (req, res, next) => {
       description: req.body.description,
       extend_description: req.body.extend_description,
       topic: req.body.topic,
+      add_time: currentDay,
+      last_modify: currentDay
     };
     let lastNews = await News.find().sort({ news_id: -1 }).limit(1);
     if (!lastNews) {
@@ -161,7 +164,7 @@ function getUrlFromTitleAndId(title, id) {
 //get views of news
 newsController.countViews = async (req, res, next) => {
   try{
-    let newsId = req.body.news_id;
+    let newsId = req.query.news_id;
     const news = await News.findOne({
       news_id: newsId,
     });
@@ -217,28 +220,25 @@ newsController.getAllNews = async (req, res, next) => {
   }
 }
 
+//update news by news_id => require ADMIN role
 newsController.updateNews = async (req, res, next) => {
   try{
-    let data = req.body.data
-    console.log(data.author)
-
-
-    const news_id = req.body.news_id.news_id
-    console.log(news_id)
-    const resUp = await News.updateOne({news_id:news_id},{
+    let data = req.body
+    const news_id = req.query.news_id
+    await News.updateOne({news_id:news_id},{
       title:data.title,
       content:data.content,
-      author:"Tuấn Hihi",
+      author:data.author,
       url_image:data.url_image,
       description:data.description,
       extend_description:data.extend_description,
       topic:data.topic,
-      add_time: new Date().toLocaleDateString()
+      last_modify: currentDay
     })
     // console.log(resUp.n)
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
-      message: "update news successfully!",
+      message: "update news successfully!"
     });
   }
   catch(err){
@@ -251,7 +251,48 @@ newsController.updateNews = async (req, res, next) => {
   }
 }
 
+//delete news by news_id => require ADMIN role
+newsController.deleteNews = async (req, res, next) => {
+  try{
+    let news_id = req.query.news_id
+    const rsNews = await News.find({news_id: news_id});
+    if(rsNews.length == 0){
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "News not found!",
+      });
+    }
+    await News.deleteOne({news_id: news_id});
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "Delete news successfully!",
+    });
 
+  }catch(err){
+    console.log(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
 
+//couht number of new news today => require ADMIN role
+newsController.countNewNewsInDay = async (req, res, next) => {
+  try{
+    const countNews = await News.find({add_time: currentDay})
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "count successfully!",
+      data: {counts: countNews.length}
+    });
+  }catch(err){
+    console.log(err)
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
 
 module.exports = newsController;

@@ -136,7 +136,7 @@ watchLaterController.deleteNewsFromWatchLater = async (req, res, next) => {
                 message: "Unauthorized",
             });
         }
-        let news_id = req.body.news_id;
+        let news_id = req.query.news_id;
         let justDeleteNews = await WatchLater.deleteOne({
             user_id: userId,
             news_id: news_id
