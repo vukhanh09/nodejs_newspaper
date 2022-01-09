@@ -51,7 +51,8 @@ userController.addPost = async (req, res, next) => {
         var newid = await News.findOne().sort('-news_id').exec()
         newid = newid.news_id+1
         data.url = data.url + newid.toString()
-        // console.log(newid)
+        console.log(newid)
+        console.log(data)
         try{
             await News.create({
                 ...data,

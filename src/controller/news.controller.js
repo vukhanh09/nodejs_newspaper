@@ -91,6 +91,7 @@ newsController.getTop10News = async (req, res, next) => {
 //add news: ADMIN -> require admin role
 newsController.addNews = async (req, res, next) => {
   try {
+    // console.log(req.body)
     let newsToAdd = {
       title: req.body.title,
       content: req.body.content,
@@ -98,6 +99,7 @@ newsController.addNews = async (req, res, next) => {
       description: req.body.description,
       extend_description: req.body.extend_description,
       topic: req.body.topic,
+      author:req.body.author,
       add_time: currentDay,
       last_modify: currentDay
     };
@@ -220,11 +222,61 @@ newsController.getAllNews = async (req, res, next) => {
   }
 }
 
+newsController.getNewsByTopicAndTitle = async (req, res, next) => {
+  try{
+    console.log(req.query)
+    const topicNeed = req.query.topic
+    const titleNeed = req.query.title
+    var news;
+    // console.log(titleNeed)
+    if(!titleNeed.length){
+      news = await News.find({topic:topicNeed});
+    }
+    else if(!topicNeed.length){
+      const regParm = { $regex: titleNeed, $options: 'i' }
+      news = await News.find({ title: regParm }).exec();
+    }
+    else if(titleNeed.length && topicNeed.length ){
+      const regParm = { $regex: titleNeed, $options: 'i' }
+      news = await News.find({
+        $and: [
+          { title: regParm },
+          {topic:topicNeed}
+        ]
+      }).exec();
+
+
+    }
+    if (!news || news.length==0) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "News not found!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "get all list news by topic successfully!",
+      data: {
+        listNews: news
+      },
+    });
+  }
+  catch(err){
+    console.log(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+
+  }
+}
+
 //update news by news_id => require ADMIN role
 newsController.updateNews = async (req, res, next) => {
   try{
-    let data = req.body
-    const news_id = req.query.news_id
+    let data = req.body.data
+    const news_id = req.body.news_id.news_id
+
     await News.updateOne({news_id:news_id},{
       title:data.title,
       content:data.content,
@@ -254,7 +306,9 @@ newsController.updateNews = async (req, res, next) => {
 //delete news by news_id => require ADMIN role
 newsController.deleteNews = async (req, res, next) => {
   try{
-    let news_id = req.query.news_id
+    // console.log(req)
+    let news_id = req.body.news_id
+    // console.log(news_id)
     const rsNews = await News.find({news_id: news_id});
     if(rsNews.length == 0){
       return res.status(httpStatus.NOT_FOUND).send({
@@ -263,6 +317,7 @@ newsController.deleteNews = async (req, res, next) => {
       });
     }
     await News.deleteOne({news_id: news_id});
+    // console.log('done')
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "Delete news successfully!",

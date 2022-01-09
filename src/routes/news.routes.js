@@ -15,6 +15,7 @@ module.exports = function(app) {
     app.get("/api/news/get-top10-hot-news", controller.getTop10News);
     app.post("/api/news/add-news", controller.addNews);
     app.get("/api/news/get-all-news", controller.getAllNews);
+    app.get("/api/news/get-news-by-topic", controller.getNewsByTopicAndTitle);
     app.post("/api/news/update-news",[authJwt.verifyToken, authJwt.isAdmin], controller.updateNews);
     app.delete("/api/news/delete-news",[authJwt.verifyToken, authJwt.isAdmin], controller.deleteNews);
     app.get("/api/news/count-news-today",[authJwt.verifyToken, authJwt.isAdmin], controller.countNewNewsInDay);
