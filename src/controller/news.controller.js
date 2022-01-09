@@ -224,7 +224,7 @@ newsController.getAllNews = async (req, res, next) => {
 
 newsController.getNewsByTopicAndTitle = async (req, res, next) => {
   try{
-    console.log(req.query)
+    // console.log(req.query)
     const topicNeed = req.query.topic
     const titleNeed = req.query.title
     var news;
