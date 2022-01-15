@@ -7,17 +7,18 @@ const currentDay = new Date().toLocaleDateString();
 //get news by news_id
 newsController.getNewsById = async (req, res, next) => {
   try {
-    let newsId = req.query.newsId;
+    let newsId = req.query.news_id;
+    console.log(newsId);
     const news = await News.findOne({
-      news_id: newsId,
+      news_id: newsId
     });
-    
     if (!news) {
       return res.status(httpStatus.NOT_FOUND).send({
         code: httpStatus.NOT_FOUND,
         message: "News not found!",
       });
     }
+    // console.log("news by id", news);
     let currentViews = news.views;
     // console.log(currentViews);
     await News.updateOne({news_id: newsId},{
@@ -62,7 +63,32 @@ newsController.getHotNews = async (req, res, next) => {
 };
 
 //get hot topic
-newsController.getHotNewsByTopic = async (req, res, next) => {};
+newsController.getHotNewsByTopic = async (req, res, next) => {
+  try{
+    const topicNames= ["Du lịch", "Kinh doanh", "Thời sự", "Thế giới"];
+    let rsNews = [];
+    for(let i = 0; i< topicNames.length; i++){
+      let news = await News.find({topic: topicNames[i]}).sort({views: -1}).limit(1);
+      rsNews.push(news[0]);
+    }
+    if(!rsNews){
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Topic is not exist or don\' have a news satisfy!"
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "get hot news by topic successfully!",
+      data: rsNews
+    });
+  }catch(err){
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+};
 
 //get the top 10 most viewed news
 newsController.getTop10News = async (req, res, next) => {
