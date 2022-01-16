@@ -12,6 +12,7 @@ module.exports = function(app) {
     app.get("/api/news/get-news-by-id", controller.getNewsById);
     app.get("/api/news/get-views-by-id", controller.countViews);
     app.get("/api/news/get-hot-news", controller.getHotNews);
+    app.get("/api/news/get-hot-news-by-topic", controller.getHotNewsByTopic);
     app.get("/api/news/get-top10-hot-news", controller.getTop10News);
     app.post("/api/news/add-news", controller.addNews);
     app.get("/api/news/get-all-news", controller.getAllNews);

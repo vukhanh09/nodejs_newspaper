@@ -13,4 +13,5 @@ module.exports = function(app) {
     app.get("/api/watch-later/get-list", [authJwt.verifyToken], watchLaterController.getListWatchLaterOrderByTime);
     app.get("/api/watch-later/get-list-by-topic",[authJwt.verifyToken], watchLaterController.getListWatchLaterOrderByTimeEveryTopic);
     app.delete("/api/watch-later/delete-news",[authJwt.verifyToken],watchLaterController.deleteNewsFromWatchLater);
+    app.post("/api/watch-later/check-exist", [authJwt.verifyToken], watchLaterController.checkAlreadyInWatchLaterList);
   };

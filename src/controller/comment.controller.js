@@ -8,7 +8,7 @@ const commentController = {};
 commentController.getListCommentOfNews = async (req, res, next) => {
     try{
         let newsId = req.query.news_id;
-        let listComments = await Comment.find({news_id: newsId});
+        let listComments = await Comment.findOne({news_id: newsId});
         console.log(listComments);
         if(!listComments){
             return res.status(httpStatus.NO_CONTENT).send({
@@ -69,6 +69,7 @@ commentController.addCommentForNews = async (req, res, next) => {
         let newsId = req.body.news_id;
         let comment = {
             user_id: userId,
+            nick_name: user.nick_name,
             content: req.body.content,
             timestamp: Date.now()
         }

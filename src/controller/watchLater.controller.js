@@ -45,11 +45,42 @@ watchLaterController.addNewsToListWatchLater = async (req, res, next) => {
                 data: justNewsAdded
             });
         }else{
-            return res.status(httpStatus.BAD_REQUEST).send({
+            return res.status(httpStatus.OK).send({
                 code: httpStatus.BAD_REQUEST,
                 message: "This news has already added in watch later list news!"
             });
         }
+    }catch(err){
+        return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+            code: httpStatus.INTERNAL_SERVER_ERROR,
+            message: err.message
+        });
+    }
+}
+//check news already in watch later list
+watchLaterController.checkAlreadyInWatchLaterList = async (req, res, next) => {
+    try{
+        let isExist = true;
+        let userId = req.userId;
+        let user = await User.findById(userId);
+        if (user == null) {
+            return res.status(httpStatus.UNAUTHORIZED).send({
+            code: httpStatus.UNAUTHORIZED,
+            message: "Unauthorized",
+            });
+        }
+        let checkNews = await WatchLater.find({
+            user_id: userId,
+            news_id: req.body.news_id
+        });
+        if(checkNews.length == 0){
+            isExist = false;  
+        }
+        return res.status(httpStatus.OK).send({
+            code: httpStatus.OK,
+            message: "Success",
+            data: isExist
+        });
     }catch(err){
         return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
             code: httpStatus.INTERNAL_SERVER_ERROR,
