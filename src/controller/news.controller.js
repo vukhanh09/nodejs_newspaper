@@ -117,7 +117,7 @@ newsController.getTop10News = async (req, res, next) => {
 //The last 3 news added
 newsController.get3LastAddedNews = async (req, res, next) => {
   try {
-    let hotNews = await News.find().sort({ add_time: 1 }).limit(3);
+    let hotNews = await News.find().sort({ add_time: -1 }).limit(3);
     if (!hotNews) {
       return res.status(httpStatus.NOT_FOUND).send({
         code: httpStatus.NOT_FOUND,
@@ -127,6 +127,31 @@ newsController.get3LastAddedNews = async (req, res, next) => {
     return res.status(httpStatus.OK).send({
       code: httpStatus.OK,
       message: "get the last 3 news added successfully!",
+      data: hotNews,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
+
+//The last 3 news added
+newsController.get3LastAddedNewsOfTopic = async (req, res, next) => {
+  try {
+    let topic = req.query.topic;
+    let hotNews = await News.find({topic: topic}).sort({ add_time: -1 }).limit(3);
+    if (!hotNews) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Collection is empty!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: `get the last 3 news added of topic ${topic} successfully!`,
       data: hotNews,
     });
   } catch (err) {
