@@ -12,6 +12,7 @@ function route(app){
     require("./admin.routes")(app);
     require("./comment.routes")(app);
     require("./watchLater.routes")(app);
+    require("./uploadImage.routes")(app);
 
 }
 module.exports = route;
