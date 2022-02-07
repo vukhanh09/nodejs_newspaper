@@ -132,7 +132,7 @@ watchLaterController.getListWatchLaterOrderByTimeEveryTopic = async (req, res, n
                 message: "Unauthorized",
             });
         }
-        let topic_news = req.body.topic; 
+        let topic_news = req.query.topic; 
         let listWatchLaterNews = await WatchLater.find({
             user_id: userId,
             topic: topic_news

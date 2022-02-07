@@ -450,4 +450,78 @@ newsController.countNewNewsInDay = async (req, res, next) => {
   }
 }
 
+//top 4 news in tourism topic
+newsController.getTop4InTourism = async (req, res, next) => {
+  try{
+    let hotNews = await News.find({topic: 'Du lịch'}).sort({ views: -1 }).limit(4);
+    if (!hotNews) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Collection is empty!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: `get top 4 hot news of tourism successfully`,
+      data: hotNews,
+    });
+  }catch(err){
+    console.log(err)
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+} 
+
+// get hot news of each topic 
+newsController.getHotNewsOfEachTopic = async (req, res, next) => {
+  try{
+    let topic = req.query.topic;
+    let hotNews = await News.find({topic: topic}).sort({views : -1}).limit(1)
+    if (!hotNews) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Collection is empty!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: `get hot news of topic ${topic} successfully!`,
+      data: hotNews[0],
+    });
+  }catch(err){
+    console.log(err)
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
+
+//get top4 newest news in each topic
+newsController.getTop4NewestNewsOfEachTopic = async (req, res, next) => {
+  try{
+    let topic = req.query.topic;
+    let hotNews = await News.find({topic: topic}).sort({add_time : -1}).limit(9)
+    if (!hotNews) {
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Collection is empty!",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: `get top 4 newest news of topic ${topic} successfully!`,
+      data: hotNews,
+    });
+  }catch(err){
+    console.log(err)
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
+
 module.exports = newsController;

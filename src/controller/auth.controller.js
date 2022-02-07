@@ -13,7 +13,8 @@ exports.signup =  (req, res) => {
         email: req.body.email,
         password: bcrypt.hashSync(req.body.password,8),
         address: req.body.address,
-        date_of_birth: req.body.date_of_birth
+        date_of_birth: req.body.date_of_birth,
+        avt_url: "path/default.png"
     });
 
     user.save((err, user) => {
