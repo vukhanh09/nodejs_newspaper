@@ -14,7 +14,8 @@ const User = mongoose.model(
             }
         ],
         address: String,
-        date_of_birth: String
+        date_of_birth: String,
+        avt_url: String
     })
 );
 

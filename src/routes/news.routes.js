@@ -23,4 +23,7 @@ module.exports = function(app) {
     app.post("/api/news/update-news",[authJwt.verifyToken, authJwt.isAdmin], controller.updateNews);
     app.delete("/api/news/delete-news",[authJwt.verifyToken, authJwt.isAdmin], controller.deleteNews);
     app.get("/api/news/count-news-today",[authJwt.verifyToken, authJwt.isAdmin], controller.countNewNewsInDay);
+    app.get("/api/news/get-top4-tourism", controller.getTop4InTourism);
+    app.get("/api/news/get-hot-news-each-topic", controller.getHotNewsOfEachTopic);
+    app.get("/api/news/get-top4-newest-news-each-topic", controller.getTop4NewestNewsOfEachTopic)
   };
