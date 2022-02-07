@@ -315,4 +315,35 @@ userController.getListUsers = async (req, res, next) => {
     });
   }
 }
+
+userController.changeAvatar = async (req, res, next) => {
+  try{
+    let userId = req.userId;
+    let user = await User.findById(userId);
+    if (user == null) {
+      return res.status(httpStatus.UNAUTHORIZED).send({
+        code: httpStatus.UNAUTHORIZED,
+        message: "Unauthorized",
+      });
+    }
+    let newAvt = req.body.newUrl;
+    user = await User.findOneAndUpdate(
+      {_id: userId},
+      {
+        avt_url: newAvt
+      }
+    );
+    const rsUser = await User.findById(userId);
+    res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "update user\'s avatar image url successfully!",
+      data: rsUser
+    });
+  }catch{
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
 module.exports = userController;

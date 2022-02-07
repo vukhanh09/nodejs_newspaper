@@ -18,6 +18,7 @@ module.exports = function(app) {
   app.post("/api/users/update-username", [authJwt.verifyToken], controller.updateUserName);
   app.post("/api/users/update-nickname", [authJwt.verifyToken], controller.updateUserNickName);
   app.post("/api/users/update-dateofbirth", [authJwt.verifyToken], controller.updateUserDateOfBirth);
-
+  app.post("/api/users/update-avatar", [authJwt.verifyToken], controller.changeAvatar);
   app.get("/api/users/get-list-users",[authJwt.verifyToken, authJwt.isAdmin], controller.getListUsers);
+
 };
