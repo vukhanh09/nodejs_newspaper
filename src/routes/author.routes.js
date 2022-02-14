@@ -10,4 +10,5 @@ module.exports = function(app) {
     });  
     app.get("/api/author/get-author-by-id", controller.getAuthorById);
     app.get("/api/author/get-author-by-name", controller.getAuthorByName);
+    app.get("/api/author/get-top5-author-by-first-name", controller.getTop5Author)
   };
