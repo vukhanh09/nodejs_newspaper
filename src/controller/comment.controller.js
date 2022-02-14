@@ -69,6 +69,7 @@ commentController.addCommentForNews = async (req, res, next) => {
         let newsId = req.body.news_id;
         let comment = {
             user_id: userId,
+            user_avt: user.avt_url,
             nick_name: user.nick_name,
             content: req.body.content,
             timestamp: Date.now()
