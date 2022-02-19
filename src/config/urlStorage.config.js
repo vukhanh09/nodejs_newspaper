@@ -1,3 +1,3 @@
 module.exports = {
-    url :'/home/vukhanh/Develop/reactjs_web/public'
+    url :'D:\\CNW\\reactjs_web\\public'
 }

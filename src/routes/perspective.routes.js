@@ -10,4 +10,5 @@ module.exports = function(app) {
     });  
     app.get("/api/perspective/get-all-perspectives", controller.getAllPerspective);
     app.get("/api/perspective/get-perspectives-by-author", controller.getPerspectiveByAuthor);
+    app.get("/api/perspective/get-top10-perspectives", controller.getTop10Perspective)
   };

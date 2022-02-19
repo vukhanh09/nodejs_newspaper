@@ -50,4 +50,26 @@ perspectiveController.getPerspectiveByAuthor = async (req, res, next) => {
     });
   }
 };
+
+perspectiveController.getTop10Perspective = async (req, res, next) => {
+  try{
+    let listPerspective = await Perspectives.find().sort({title: -1}).limit(10);
+    if(listPerspective.length == 0){
+      return res.status(httpStatus.NOT_FOUND).send({
+        code: httpStatus.NOT_FOUND,
+        message: "Perspectives data is empty",
+      });
+    }
+    return res.status(httpStatus.OK).send({
+      code: httpStatus.OK,
+      message: "get top 10 perspective successfully!",
+      data: listPerspective
+    });
+  }catch(err){
+    return res.status(httpStatus.INTERNAL_SERVER_ERROR).send({
+      code: httpStatus.INTERNAL_SERVER_ERROR,
+      message: err.message,
+    });
+  }
+}
 module.exports = perspectiveController;
