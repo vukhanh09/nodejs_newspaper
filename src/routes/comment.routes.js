@@ -13,4 +13,5 @@ module.exports = function(app) {
     app.get("/api/comment/get-list-comment-in-news", controller.getListCommentOfNews);
     app.get("/api/comment/get-number-comment-in-news", controller.countNumberCommentOfNews);
     app.post("/api/comment/add-comment", [authJwt.verifyToken],controller.addCommentForNews);
+    app.get("/api/comment/check-bad-word",controller.checkBadWord);
   };
